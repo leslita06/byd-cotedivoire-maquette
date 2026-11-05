@@ -1,0 +1,78 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Acheter ma BYD | BYD Côte d'Ivoire</title>
+<meta name="description" content="Maquette proposée par Yelema, non publiée. BYD Côte d'Ivoire par CFAO Mobility.">
+<link rel="icon" href="img/favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=4"><script src="assets/data.js?v=1"></script></head>
+<body data-page="achat" class="funnel-p">
+
+<div class="funnel"><div class="wrap" id="app">
+<div class="fhead"><div><span class="k">Achat en ligne</span><h1>Configurer et réserver ma BYD</h1></div><span style="color:var(--mut);font-size:14px">Acompte remboursable sous 14 jours.</span></div>
+<div class="prog" id="prog"></div>
+<div class="flay"><div class="panel" id="step"></div><aside class="recap"><div class="panel"><img id="rimg" src="img/atto3-1.jpg" alt=""><div class="in"><span class="k" style="margin:0 0 4px">Votre configuration</span><h3 id="rname"></h3><dl id="rdl"></dl><div class="tot"><span id="tl">Prix indicatif</span><b id="tv"></b></div><p class="fict" style="margin-top:6px">Prix fictifs de démonstration</p></div></div></aside></div>
+</div>
+<div class="wrap" id="fin" style="display:none"></div></div>
+<script src="assets/app.js?v=2"></script><script>
+const q=new URLSearchParams(location.search);
+const S={m:BYD.models[q.get('m')]?q.get('m'):'atto3',v:0,c:0,f:q.get('f')==='loxea'?'loxea':'credit',ap:20,du:60,ld:36,pay:'wave',nom:'',tel:'',sr:'marseille'};
+const steps=['Modèle et version','Couleur','Financement','Acompte'];let st=0;const ACOMPTE=500000;
+const M=()=>BYD.models[S.m],V=()=>M().versions[S.v],C=()=>M().colors[S.c];
+function money(){const p=V().price;if(S.f==='cash')return{l:'Prix comptant',v:fcfa(p)};if(S.f==='credit'){const ap=p*S.ap/100;return{l:'Crédit, par mois',v:fcfa(mensu(p-ap,S.du)),ap}}return{l:'Location LOXEA, par mois',v:fcfa(loyer(p,S.ld))}}
+function recap(){const m=M(),x=money();rimg.src='img/'+m.imgs[0]+'.jpg';rname.textContent='BYD '+m.name+' '+V().name;
+const fl={cash:'Comptant',credit:'Crédit auto, '+S.du+' mois',loxea:'Location LOXEA, '+S.ld+' mois'}[S.f];
+rdl.innerHTML=[['Version',V().name],['Couleur',C().n],['Autonomie',V().range+' km'],['Paiement',fl],['Prix indicatif',fcfa(V().price)],['Acompte',fcfa(ACOMPTE)]].map(r=>`<div><dt>${r[0]}</dt><dd>${r[1]}</dd></div>`).join('');tl.textContent=x.l;tv.textContent=x.v}
+function prog(){document.getElementById('prog').innerHTML=steps.map((n,i)=>`<div class="${i<st?'done':i===st?'on':''}"><i></i><span>${i+1}. ${n}</span></div>`).join('')}
+function nav(ok,last){return `<div class="fnav">${st>0?'<button class="btn ghost" id="bk">Retour</button>':'<span></span>'}<button class="btn" id="nx" ${ok?'':'disabled'}>${last?'Payer l\'acompte de '+fcfa(ACOMPTE):'Continuer'}</button></div>`}
+function seg(id,arr,val){return `<div class="seg" id="${id}">${arr.map(a=>`<button data-v="${a[0]}" class="${a[0]==val?'on':''}">${a[1]}</button>`).join('')}</div>`}
+function render(){prog();recap();const P=document.getElementById('step');
+if(st===0){P.innerHTML=`<h2>Votre modèle</h2><p class="sub">Vous pourrez changer d'avis jusqu'à la livraison.</p>
+<div class="opts">${BYD.order.map(k=>{const m=BYD.models[k];return `<button class="opt mod ${S.m===k?'on':''}" data-m="${k}"><img src="img/${m.imgs[0]}.jpg" alt=""><div><b>${m.name}</b><span>À partir de ${fcfa(m.price)}</span></div></button>`}).join('')}</div>
+<h2 style="margin-top:30px">Votre version</h2><p class="sub">Prix indicatifs fictifs, démonstration.</p>
+<div class="opts">${M().versions.map((v,i)=>`<button class="opt ${S.v===i?'on':''}" data-v="${i}"><b>${v.name}</b><span>${v.note}</span><span>${v.range} km d'autonomie WLTP</span><span class="pill">${fcfa(v.price)}</span></button>`).join('')}</div>`+nav(true);
+ P.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{S.m=b.dataset.m;S.v=0;S.c=0;render()});P.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{S.v=+b.dataset.v;render()});}
+if(st===1){P.innerHTML=`<h2>Votre couleur</h2><p class="sub">Toutes les teintes sont sans supplément.</p>
+<img src="img/${M().imgs[1]}.jpg" alt="" style="border-radius:12px;aspect-ratio:16/9;object-fit:cover;width:100%;margin-bottom:22px">
+<div class="swatches">${M().colors.map((c,i)=>`<button class="sw ${S.c===i?'on':''}" data-c="${i}" style="background:${c.c}" aria-label="${c.n}"></button>`).join('')}</div><div class="swname">${C().n}. Photo non contractuelle.</div>
+<h2 style="margin-top:28px">Livraison</h2><p class="sub">Où souhaitez-vous recevoir votre véhicule ?</p>
+<div class="opts">${BYD.showrooms.map(s=>`<button class="opt ${S.sr===s.id?'on':''}" data-s="${s.id}"><b>${s.name}</b><span>${s.city}</span></button>`).join('')}</div>`+nav(true);
+ P.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{S.c=+b.dataset.c;render()});P.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S.sr=b.dataset.s;render()});}
+if(st===2){const p=V().price;let det='';
+ if(S.f==='cash')det=`<div class="fin"><span style="color:var(--mut)">Prix comptant indicatif</span><div class="big">${fcfa(p)}</div><span style="color:var(--mut);font-size:14px">Solde réglé à la livraison, par virement ou chèque de banque.</span></div>`;
+ if(S.f==='credit')det=`<div class="fin"><div class="field"><label>Apport personnel <output>${S.ap} %, ${fcfa(p*S.ap/100)}</output></label><input type="range" id="ap" min="10" max="50" step="5" value="${S.ap}"></div>
+ <div class="field"><label>Durée</label>${seg('du',[[36,'36 mois'],[48,'48 mois'],[60,'60 mois'],[72,'72 mois']],S.du)}</div>
+ <span style="color:var(--mut)">Votre mensualité estimée</span><div class="big">${fcfa(mensu(p*(1-S.ap/100),S.du))}</div><span style="color:var(--mut);font-size:13px">Simulation fictive à 9 % par an, avec une banque partenaire. Sous réserve d'acceptation du dossier.</span></div>`;
+ if(S.f==='loxea')det=`<div class="fin"><div class="field"><label>Durée de location</label>${seg('ld',[[36,'36 mois'],[48,'48 mois']],S.ld)}</div>
+ <span style="color:var(--mut)">Loyer mensuel estimé</span><div class="big">${fcfa(loyer(p,S.ld))}</div><span style="color:var(--mut);font-size:13px">Entretien, assurance et assistance inclus. Simulation fictive LOXEA, pour les particuliers comme pour les flottes d'entreprise.</span></div>`;
+ P.innerHTML=`<h2>Comment souhaitez-vous payer ?</h2><p class="sub">Trois façons de rouler en BYD.</p>
+<div class="opts o3" id="fo">${[['cash','Comptant','Paiement à la livraison'],['credit','Crédit auto','Apport et mensualités'],['loxea','Location LOXEA','Tout compris, sans apport']].map(o=>`<button class="opt ${S.f===o[0]?'on':''}" data-f="${o[0]}"><b>${o[1]}</b><span>${o[2]}</span></button>`).join('')}</div>${det}`+nav(true);
+ P.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{S.f=b.dataset.f;render()});
+ const ap=document.getElementById('ap');if(ap)ap.oninput=()=>{S.ap=+ap.value;render()};
+ ['du','ld'].forEach(id=>{const e=document.getElementById(id);if(e)e.onclick=ev=>{const v=ev.target.dataset.v;if(v){S[id]=+v;render()}}});}
+if(st===3){P.innerHTML=`<h2>Réservez votre véhicule</h2><p class="sub">Un acompte de ${fcfa(ACOMPTE)} bloque votre BYD et son prix. Il est déduit du prix final et remboursable sous 14 jours.</p>
+<div class="pay">${[['wave','Wave'],['om','Orange Money'],['momo','MTN MoMo'],['cb','Carte bancaire']].map(p=>`<button class="opt ${S.pay===p[0]?'on':''}" data-p="${p[0]}"><b>${p[1]}</b></button>`).join('')}</div>
+<div class="form" style="margin-top:22px"><div class="full"><label for="nom">Nom et prénom</label><input id="nom" autocomplete="off" value="${S.nom}" placeholder="Ex. Aya Kouassi"></div>
+<div><label for="tel">Téléphone</label><input id="tel" inputmode="tel" autocomplete="off" value="${S.tel}" placeholder="07 00 00 00 00"></div>
+<div><label for="cmn">Commune</label><select id="cmn"><option>Cocody</option><option>Plateau</option><option>Marcory</option><option>Yopougon</option><option>Yamoussoukro</option><option>Bouaké</option><option>Autre</option></select></div>
+<label class="chk full"><input type="checkbox" checked> J'accepte les conditions de réservation</label></div>
+<div class="notice">ⓘ Paiement simulé : aucun débit, aucune donnée enregistrée. Vous pouvez saisir des informations fictives.</div>`+nav(true,true);
+ P.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{S.pay=b.dataset.p;P.querySelectorAll('[data-p]').forEach(x=>x.classList.toggle('on',x===b))});
+ ['nom','tel'].forEach(f=>{const i=document.getElementById(f);i.oninput=()=>S[f]=i.value});}
+const bk=document.getElementById('bk');if(bk)bk.onclick=()=>{st--;render();scrollTo(0,0)};
+document.getElementById('nx').onclick=()=>{if(st<3){st++;render();scrollTo(0,0)}else pay()};}
+function pay(){const b=document.getElementById('nx');b.textContent='Paiement en cours…';b.disabled=true;setTimeout(done,1100)}
+function done(){const m=M(),x=money(),s=BYD.showrooms.find(z=>z.id===S.sr),ref='BYD-CI-'+(Date.now()%1000000).toString().padStart(6,'0');
+const pm={wave:'Wave',om:'Orange Money',momo:'MTN MoMo',cb:'carte bancaire'}[S.pay];const pr=(S.nom||'').trim().split(' ')[0];
+app.style.display='none';fin.style.display='block';
+fin.innerHTML=`<div class="done"><div class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="M5 12l5 5 9-10"/></svg></div>
+<span class="k">Commande réservée</span><h1>${pr?'Félicitations '+pr+', votre':'Félicitations, votre'} BYD ${m.name} est réservée.</h1>
+<div class="ref">Commande ${ref}</div>
+<div class="panel"><div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><img src="img/${m.imgs[0]}.jpg" alt="" style="width:200px;border-radius:12px;aspect-ratio:3/2;object-fit:cover"><div style="flex:1;min-width:220px"><h3 style="font-size:22px">BYD ${m.name} ${V().name}, ${C().n}</h3><p style="color:var(--mut)">${x.l} : <b style="color:var(--ink)">${x.v}</b><br>Acompte de ${fcfa(ACOMPTE)} réglé par ${pm} (simulé)<br>Livraison : ${s.name}, ${s.city}</p></div></div>
+<div class="tl" style="margin-top:18px"><div class="y"><i>✓</i><div><b>Acompte reçu, véhicule bloqué à votre nom</b><span>Reçu envoyé sur WhatsApp (simulé pour la démonstration).</span></div></div>
+<div><i>2</i><div><b>Appel de votre conseiller sous 24 h</b><span>${S.f==='cash'?'Validation de la commande et du mode de règlement.':S.f==='credit'?'Montage du dossier de crédit avec la banque partenaire.':'Signature du contrat de location LOXEA.'}</span></div></div>
+<div><i>3</i><div><b>Préparation et immatriculation</b><span>Contrôle avant livraison, plaques et carte grise par CFAO Mobility.</span></div></div>
+<div><i>4</i><div><b>Remise des clés</b><span>Prise en main d'une heure, installation de votre borne à domicile en option.</span></div></div></div></div>
+<div class="acts"><a class="btn" href="#" data-wa>Suivre ma commande sur WhatsApp</a><a class="btn ghost" href="index.html">Retour à l'accueil</a></div>
+<p class="hyp">Maquette de démonstration : aucun paiement ni aucune donnée n'ont été enregistrés.</p></div>`;
+fin.querySelector('[data-wa]').onclick=e=>{e.preventDefault();document.getElementById('wa').classList.add('on')};scrollTo(0,0)}
+render();
+</script></body></html>

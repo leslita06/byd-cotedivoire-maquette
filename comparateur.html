@@ -1,0 +1,41 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>Électrique ou thermique | BYD Côte d'Ivoire</title>
+<meta name="description" content="Maquette proposée par Yelema, non publiée. BYD Côte d'Ivoire par CFAO Mobility.">
+<link rel="icon" href="img/favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=4"><script src="assets/data.js?v=1"></script></head>
+<body data-page="cmp">
+
+<section style="padding:56px 0 80px"><div class="wrap">
+<div class="sh"><div><span class="k">Comparateur</span><h2>Électrique ou thermique : combien vous gagnez.</h2></div><p>Réglez vos trajets. Le calcul compare votre BYD à un SUV essence équivalent, sur une année.</p></div>
+<div class="cmp">
+<div class="card">
+<div class="field"><label>Modèle BYD</label><div class="seg" id="cm"></div></div>
+<div class="field"><label>Kilomètres par jour <output id="ko">60 km</output></label><input type="range" id="km" min="10" max="200" step="5" value="60"></div>
+<div class="field"><label>Jours de route par mois <output id="jo">24 j</output></label><input type="range" id="jr" min="10" max="31" value="24"></div>
+<div class="field"><label>Prix du super <output id="po">875 FCFA/L</output></label><input type="range" id="pe" min="700" max="1000" step="5" value="875"></div>
+<div class="field" style="margin:0"><label>Recharge principale</label><div class="seg" id="rc"><button class="on" data-v="95">À domicile</button><button data-v="150">Borne rapide</button></div></div>
+</div>
+<div>
+<div class="card"><span class="k">Coût d'énergie par an</span>
+<div class="bars"><div class="bar"><div class="l"><span>SUV essence, 9 L aux 100 km</span><b id="th"></b></div><div class="t"><i id="tbar" style="background:#9a9da3"></i></div></div>
+<div class="bar"><div class="l"><span id="evn">BYD</span><b id="ev"></b></div><div class="t"><i id="ebar" style="background:var(--ink)"></i></div></div>
+<div class="bar"><div class="l"><span>Entretien courant estimé</span><b id="en"></b></div></div></div></div>
+<div class="save" style="margin-top:18px"><div><b id="s1"></b><span>économisés par an</span></div><div><b id="s2"></b><span>économisés par mois</span></div><div><b id="s3"></b><span>de CO2 en moins à l'échappement par an</span></div></div>
+<p class="hyp">Estimation de démonstration. Hypothèses : SUV essence 9 L aux 100 km ; BYD 14 à 17 kWh aux 100 km selon modèle ; kWh à domicile 95 FCFA, en borne rapide 150 FCFA ; entretien 120 000 FCFA par an pour l'électrique, 450 000 FCFA pour le thermique ; 2,3 kg de CO2 par litre d'essence. Valeurs à remplacer par celles de CFAO Mobility.</p>
+<div style="display:flex;gap:12px;margin-top:22px;flex-wrap:wrap"><a class="btn" id="ce" href="essai.html">Essayer ce modèle</a><a class="btn ghost" id="ca" href="achat.html">Simuler mon financement</a></div>
+</div></div></div></section>
+<script src="assets/app.js?v=2"></script><script>
+const cons={dolphin:14.5,atto3:16,seal:15,sealion7:17};let cur='atto3',kwh=95;
+cm.innerHTML=BYD.order.map(k=>`<button data-k="${k}" class="${k===cur?'on':''}">${BYD.models[k].name}</button>`).join('');
+cm.onclick=e=>{const k=e.target.dataset.k;if(!k)return;cur=k;[...cm.children].forEach(b=>b.classList.toggle('on',b.dataset.k===k));calc()};
+rc.onclick=e=>{const v=e.target.dataset.v;if(!v)return;kwh=+v;[...rc.children].forEach(b=>b.classList.toggle('on',b===e.target));calc()};
+[km,jr,pe].forEach(i=>i.oninput=calc);
+function calc(){const kmy=km.value*jr.value*12;ko.textContent=km.value+' km';jo.textContent=jr.value+' j';po.textContent=pe.value+' FCFA/L';
+const t=kmy*9/100*pe.value,e=kmy*cons[cur]/100*kwh,et=450000,ee=120000;
+th.textContent=fcfa(t);ev.textContent=fcfa(e);evn.textContent='BYD '+BYD.models[cur].name+', '+cons[cur]+' kWh aux 100 km';en.textContent=fcfa(ee)+' contre '+fcfa(et);
+tbar.style.width='100%';ebar.style.width=Math.max(4,e/t*100)+'%';
+const s=(t+et)-(e+ee);s1.textContent=fcfa(s);s2.textContent=fcfa(s/12);s3.textContent=(kmy*9/100*2.3/1000).toFixed(1).replace('.',',')+' t';
+ce.href='essai.html?m='+cur;ca.href='achat.html?m='+cur;}
+calc();
+</script></body></html>
