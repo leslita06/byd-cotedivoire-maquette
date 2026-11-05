@@ -1,0 +1,30 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow"><title>BYD | BYD Côte d'Ivoire</title>
+<meta name="description" content="Maquette proposée par Yelema, non publiée. BYD Côte d'Ivoire par CFAO Mobility.">
+<link rel="icon" href="img/favicon.png"><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/style.css?v=4"><script src="assets/data.js?v=1"></script></head>
+<body data-page="modele">
+
+<div class="wrap mhead" id="mh"></div>
+<div class="wrap"><div class="gal" id="gal"></div><div class="kpis" id="kpis"></div></div>
+<section><div class="wrap two">
+<div class="card"><span class="k">Recharge à Abidjan</span><h3>Faire le plein, simplement.</h3><p style="color:var(--mut)">À la maison la nuit, au bureau, ou en borne rapide dans nos showrooms.</p>
+<div class="charge" id="charge"></div></div>
+<div class="card"><span class="k">Fiche technique</span><h3>L'essentiel.</h3><table class="spec" id="spec"></table><p class="hyp">Valeurs constructeur indicatives, cycle WLTP, selon version et conditions d'utilisation.</p></div>
+</div></section>
+<section class="alt" style="padding:72px 0"><div class="wrap"><div class="sh" style="margin-bottom:24px"><div><span class="k">Les autres modèles</span><h2 style="font-size:32px">Comparer avec la gamme.</h2></div></div><div class="grid4 scroll" id="others"></div></div></section>
+<div class="sticky-cta"><div class="wrap"><div class="t" id="stt"></div><a class="btn ghost" id="stc" href="#">Essai gratuit</a><a class="btn" id="sta" href="#">Acheter</a></div></div>
+<script src="assets/app.js?v=2"></script><script>
+const k=new URLSearchParams(location.search).get('m')||'atto3',m=BYD.models[k]||BYD.models.atto3;document.title='BYD '+m.name+" | BYD Côte d'Ivoire";
+mh.innerHTML=`<div class="crumb"><a href="index.html">Gamme</a> / ${m.name}</div><div class="row"><div><span class="pill">${m.tag}</span><h1 style="margin-top:12px">BYD ${m.name}</h1><div class="ty">${m.type}, 100 % électrique</div><p style="max-width:620px;margin-top:14px;color:var(--ink2)">${m.pitch}</p></div><div class="price"><span style="color:var(--mut);font-size:14px">À partir de</span><b>${fcfa(m.price)}</b><span class="fict">Prix indicatif fictif, démonstration</span><div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap"><a class="btn ghost" href="essai.html?m=${k}">Réserver un essai</a><a class="btn" href="achat.html?m=${k}">Configurer</a></div></div></div>`;
+gal.innerHTML=m.imgs.slice(0,3).map(i=>`<img src="img/${i}.jpg" alt="BYD ${m.name}">`).join('');
+kpis.innerHTML=`<div><b>${m.range} km</b><span>Autonomie WLTP</span></div><div><b>${m.dc_time}</b><span>30 à 80 % en borne ${m.dc}</span></div><div><b>${m.acc}</b><span>0 à 100 km/h</span></div><div><b>${m.power.split(' (')[0]}</b><span>Puissance (${m.power.split('(')[1].replace(')','')})</span></div>`;
+const cpk=Math.round(m.range?15.5*95/100:0);
+charge.innerHTML=`<div class="c"><div class="ico">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11 12 3l9 8v10H3z"/></svg>'}</div><div><b>À domicile, borne ${m.ac}</b><span>Plein complet en ${m.ac_time}, pendant la nuit. Pose de la borne proposée par CFAO Mobility.</span></div></div>
+<div class="c"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8z"/></svg></div><div><b>Borne rapide ${m.dc}</b><span>30 à 80 % en ${m.dc_time}. Bornes en accès client aux showrooms Aéroport et boulevard de Marseille.</span></div></div>
+<div class="c"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div><div><b>Environ ${fcfa(cpk*100)} pour 100 km</b><span>Estimation sur une consommation de 15,5 kWh aux 100 km et 95 FCFA le kWh domestique.</span></div></div>`;
+spec.innerHTML=[['Batterie',m.battery+' Blade (LFP)'],['Autonomie WLTP',m.range+' km'],['Puissance',m.power],['0 à 100 km/h',m.acc],['Charge rapide (DC)',m.dc],['Charge à domicile (AC)',m.ac],['Places',m.seats],['Garantie batterie','8 ans']].map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join('');
+others.innerHTML=BYD.order.filter(x=>x!==k).map(x=>{const o=BYD.models[x];return `<article class="mcard"><a class="ph" href="modele.html?m=${x}"><img src="img/${o.imgs[0]}.jpg" alt="BYD ${o.name}" loading="lazy"></a><div class="bd"><h3 style="margin-top:0">${o.name}</h3><div class="ty">${o.type}, ${o.range} km</div><div class="pr" style="margin-top:12px">À partir de<b>${fcfa(o.price)}</b></div></div></article>`}).join('');
+stt.innerHTML=`<b>BYD ${m.name}</b><span>À partir de ${fcfa(m.price)}, prix fictif</span>`;stc.href='essai.html?m='+k;sta.href='achat.html?m='+k;
+</script></body></html>
